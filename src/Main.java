@@ -1,110 +1,170 @@
-/// \file Exemplo_N2_Jogl_Eclipse.java
-/// \brief Exemplo_N2_Jogl_Eclipse: desenha uma linha na diagonal.
-/// \version $Revision: 1.0 $
-/// \author Dalton Reis.
-/// \date 03/05/13.
-/// Obs.: variaveis globais foram usadas por questoes didaticas mas nao sao recomendas para aplicacoes reais.
+/**
+ * Objetivo: usar as transformações geométricas: translação, escala e rotação.
+ */
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
 import javax.media.opengl.DebugGL;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+//import javax.media.opengl.glu.GLUquadric;
+
+import com.sun.opengl.util.GLUT;
 
 public class Main implements GLEventListener, KeyListener {
-	private float ortho2D_minX = -400.0f, ortho2D_maxX =  400.0f, ortho2D_minY = -400.0f, ortho2D_maxY =  400.0f;
 	private GL gl;
 	private GLU glu;
+	private GLUT glut;
 	private GLAutoDrawable glDrawable;
+	private double xEye, yEye, zEye;
+	private double xCenter, yCenter, zCenter;
+	private final double xUp = 0.0f, yUp = 1.0f, zUp = 0.0f;
+	
+    private float corRed[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+//    private float corGreen[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+//    private float corBlue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+//    private float corWhite[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+//    private float corBlack[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+	//private static final int SIZE = 2;
 
 	public void init(GLAutoDrawable drawable) {
-		System.out.println(" --- init ---");
 		glDrawable = drawable;
 		gl = drawable.getGL();
 		glu = new GLU();
+		glut = new GLUT();
 		glDrawable.setGL(new DebugGL(gl));
-		System.out.println("Espaço de desenho com tamanho: " + drawable.getWidth() + " x " + drawable.getHeight());
-		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		xEye = 20.0f;
+		yEye = 20.0f;
+		zEye = 20.0f;
+		xCenter = 0.0f;
+		yCenter = 0.0f;
+		zCenter = 0.0f;
+		
+	    float posLight[] = { 5.0f, 5.0f, 10.0f, 0.0f };
+	    gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, posLight, 0);
+	    gl.glEnable(GL.GL_LIGHT0);
+
+	    gl.glEnable(GL.GL_CULL_FACE);
+	    gl.glEnable(GL.GL_DEPTH_TEST);
+
+	}
+
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+	    gl.glViewport(0, 0, width, height);
+        gl.glMatrixMode(GL.GL_PROJECTION);
+        gl.glLoadIdentity();
+        glu.gluPerspective(60, 1, 0.1, 100);
+        gl.glMatrixMode(GL.GL_MODELVIEW);
+        gl.glLoadIdentity();
+		glu.gluLookAt(xEye, yEye, zEye, xCenter, yCenter, zCenter, xUp, yUp, zUp);
+		Debug();
+	}
+
+	public void display(GLAutoDrawable drawable) {
+		// gl = drawable.getGL();
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+
+        gl.glMatrixMode(GL.GL_MODELVIEW);
+        gl.glLoadIdentity();
+		glu.gluLookAt(xEye, yEye, zEye, xCenter, yCenter, zCenter, xUp, yUp, zUp);
+
+		drawAxis();
+		drawCube(2.0f,2.0f,2.0f);
+		gl.glPushMatrix();
+		gl.glTranslated(0.0f, 0.0f, 1.5f);
+			drawCube(1.0f,1.0f,1.0f);
+		gl.glPopMatrix();
+//		drawCylinder(gl, 1.0f, 1.0f, 1.0f); // cilindro branco
+		
+		gl.glFlush();
 	}
 	
-	public void SRU() {
-//		gl.glDisable(gl.GL_TEXTURE_2D);
-//		gl.glDisableClientState(gl.GL_TEXTURE_COORD_ARRAY);
-//		gl.glDisable(gl.GL_LIGHTING); //TODO: [D] FixMe: check if lighting and texture is enabled
+	private void drawCube(float xS, float yS, float zS) {
+	    gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE, corRed, 0);
+	    gl.glEnable(GL.GL_LIGHTING);
 
-		// eixo x
+		gl.glPushMatrix();
+			gl.glScalef(xS,yS,zS);
+			glut.glutSolidCube(1.0f);
+		gl.glPopMatrix();
+		
+		gl.glDisable(GL.GL_LIGHTING);
+	}
+
+//	private void drawCylinder(GL gl, float red, float green, float blue) {
+//		gl.glColor3f(red, green, blue);
+//
+//		GLUquadric quad;
+//		quad = glu.gluNewQuadric();
+//		glu.gluQuadricDrawStyle(quad, GLU.GLU_FILL);
+//		glu.gluQuadricOrientation(quad, GLU.GLU_OUTSIDE);
+//		glu.gluQuadricNormals(quad, GLU.GLU_SMOOTH);
+//		glu.gluQuadricTexture(quad, true);
+//		glu.gluCylinder(quad, 0.25f, 0.25f, 1.0f, 60, 30);
+//		glu.gluDeleteQuadric(quad);
+//	}
+
+	public void drawAxis() {
+		// eixo X - Red
 		gl.glColor3f(1.0f, 0.0f, 0.0f);
-		gl.glLineWidth(1.0f);
 		gl.glBegin(GL.GL_LINES);
-			gl.glVertex2f(-200.0f, 0.0f);
-			gl.glVertex2f(200.0f, 0.0f);
-			gl.glEnd();
-		// eixo y
+		gl.glVertex3f(0.0f, 0.0f, 0.0f);
+		gl.glVertex3f(10.0f, 0.0f, 0.0f);
+		gl.glEnd();
+		// eixo Y - Green
 		gl.glColor3f(0.0f, 1.0f, 0.0f);
 		gl.glBegin(GL.GL_LINES);
-			gl.glVertex2f(0.0f, -200.0f);
-			gl.glVertex2f(0.0f, 200.0f);
+		gl.glVertex3f(0.0f, 0.0f, 0.0f);
+		gl.glVertex3f(0.0f, 10.0f, 0.0f);
+		gl.glEnd();
+		// eixo Z - Blue
+		gl.glColor3f(0.0f, 0.0f, 1.0f);
+		gl.glBegin(GL.GL_LINES);
+		gl.glVertex3f(0.0f, 0.0f, 0.0f);
+		gl.glVertex3f(0.0f, 0.0f, 10.0f);
 		gl.glEnd();
 	}
 
-	//exibicaoPrincipal
-	public void display(GLAutoDrawable arg0) {
-		 gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-		 gl.glMatrixMode(GL.GL_PROJECTION);
-		 gl.glLoadIdentity();
-		 glu.gluOrtho2D( ortho2D_minX,  ortho2D_maxX,  ortho2D_minY,  ortho2D_maxY);
-		 gl.glMatrixMode(GL.GL_MODELVIEW);
-		 gl.glLoadIdentity();
-
-		 SRU();
-		 
-		 
-		 int numPontos = 36;
-		 double grau = 360/numPontos;
-		 double raio = 100;
-		 
-		 gl.glColor3f(0.0f, 0.0f, 0.0f);
-		 gl.glPointSize(2.0f);
-		 gl.glBegin(GL.GL_POINTS);
-		 for (int i = 0; i < numPontos; i++) {
-			 gl.glVertex2d(RetornaX(grau*i, raio), RetornaY(grau*i, raio));
-		 }
-		 gl.glEnd();
-
-		 gl.glFlush();
-	}	
-
 	public void keyPressed(KeyEvent e) {
-		System.out.println(" --- keyPressed ---");
-		
-		System.out.println(" --- Redesenha ao sair do callback ---");
-		glDrawable.display();
-	}
+		switch (e.getKeyCode()) {
 
-	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
-		System.out.println(" --- reshape ---");
+		case KeyEvent.VK_ESCAPE:
+			System.exit(1);
+		break;
+		case KeyEvent.VK_1:
+			xEye = 20.0f;
+			yEye = 20.0f;
+			zEye = 20.0f;
+		break;
+		case KeyEvent.VK_2:
+			xEye = 20.0f;
+			yEye = 0.0f;
+			zEye = 0.0f;
+			break;
+		}
+		glDrawable.display();	
 	}
 
 	public void displayChanged(GLAutoDrawable arg0, boolean arg1, boolean arg2) {
-		System.out.println(" --- displayChanged ---");
 	}
 
 	public void keyReleased(KeyEvent arg0) {
-		System.out.println(" --- keyReleased ---");
+		// TODO Auto-generated method stub
+
 	}
 
 	public void keyTyped(KeyEvent arg0) {
-		System.out.println(" --- keyTyped ---");
-	}
-	
-	public double RetornaX(double angulo, double raio) {
-		return (raio * Math.cos(Math.PI * angulo / 180.0));
+		// TODO Auto-generated method stub
+
 	}
 
-	public double RetornaY(double angulo, double raio) {
-		return (raio * Math.sin(Math.PI * angulo / 180.0));
+	public void Debug() {
 	}
 
 }
