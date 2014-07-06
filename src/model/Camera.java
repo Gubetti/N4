@@ -14,9 +14,9 @@ public class Camera {
 
 	// Métodos para mudar o valor da câmera entre os diversos ângulos...
 	public void visao1() {
-		xEye = 20.0f;
-		yEye = 20.0f;
-		zEye = 20.0f;
+		xEye = 0.0f;
+		yEye = 50.0f;
+		zEye = 0.0001f;
 	}
 
 	public void visao2() {
