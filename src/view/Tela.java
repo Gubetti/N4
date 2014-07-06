@@ -86,6 +86,19 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
+		switch (e.getKeyCode()) {
+
+		case KeyEvent.VK_ESCAPE:
+			System.exit(1);
+		break;
+		case KeyEvent.VK_1:
+			mundo.getCamera().visao1();
+			break;
+		case KeyEvent.VK_2:
+			mundo.getCamera().visao2();
+			break;
+		}
+		glDrawable.display();	
 	}
 
 	public void displayChanged(GLAutoDrawable arg0, boolean arg1, boolean arg2) {
