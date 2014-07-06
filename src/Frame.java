@@ -13,9 +13,10 @@ public class Frame extends JFrame{
 	public Frame() {		
 		// Cria o frame.
 		super("CG-N4_Camera");   
-		setBounds(50,100,500,500); 
+		setBounds(50,100,750,750); 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
+		setLocationRelativeTo(null);
 
 		/* Cria um objeto GLCapabilities para especificar 
 		 * o número de bits por pixel para RGBA

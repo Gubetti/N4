@@ -334,18 +334,18 @@ public class Main implements GLEventListener, KeyListener {
 		case KeyEvent.VK_2:
 			xEye = 0.0f;
 			yEye = 0.0f;
-			zEye = 20.0f;
+			zEye = 10.0f;
 			break;
 		//De lado
 		case KeyEvent.VK_3:
-			xEye = 20.0f;
+			xEye = 10.0f;
 			yEye = 0.0f;
 			zEye = 0.0f;
 			break;
 		//De cima
 		case KeyEvent.VK_4:
 			xEye = 0.0f;
-			yEye = 20.0f;
+			yEye = 50.0f;
 			zEye = 0.0001f;
 			break;
 		}
