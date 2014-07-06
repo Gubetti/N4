@@ -103,6 +103,10 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-	
+		int dif = glDrawable.getWidth() / 2;
+		mundo.getPlataforma().setxTranslacao(e.getX() - dif);
+		//mundo.getPlataforma().setyTranslacao(e.getY() - dif);
+		glDrawable.display();
+		
 	}
 }
