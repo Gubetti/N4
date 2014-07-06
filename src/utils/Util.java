@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.Tijolo;
 
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
@@ -21,5 +25,11 @@ public class Util {
 			System.exit(1);
 		}
 		return null;
+	}
+	
+	public static List<Tijolo> carregarTijolos() {
+		List<Tijolo> tijolos = new ArrayList<Tijolo>();
+		
+		return tijolos;
 	}
 }

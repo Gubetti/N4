@@ -5,14 +5,17 @@ import javax.media.opengl.GLCapabilities;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import view.Tela;
+
 public class Frame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private Main renderer = new Main();
+	//private Main renderer = new Main();
+	private Tela renderer = new Tela();
 	
 	public Frame() {		
 		// Cria o frame.
-		super("CG-N4_Camera");   
+		super("CG-N4_Final");   
 		setBounds(50,100,750,750); 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());

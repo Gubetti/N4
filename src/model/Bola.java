@@ -12,8 +12,13 @@ public class Bola extends ObjetoGrafico {
 	private final int LINHAS_VERTICAIS = 40;
 	private final int LINHAS_HORIZONTAIS = 40;
 
-	public Bola(float raio) {
+	public Bola(float raio, float xTranslacao, float yTranslacao, float zTranslacao) {
+		super(xTranslacao, yTranslacao, zTranslacao);
 		this.raio = raio;
+
+		setxEscala(1f);
+		setyEscala(1f);
+		setzEscala(1f);
 		setTexture(Util.loadImage("texture/textureBall.png"));
 	}
 

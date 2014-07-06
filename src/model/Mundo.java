@@ -1,9 +1,11 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.glu.GLU;
+
+import utils.Util;
 
 public class Mundo {
 
@@ -16,19 +18,14 @@ public class Mundo {
 
 	public Mundo(int vidas) {
 		this.camera = new Camera();
-		this.bola = new Bola(1.0f);
-		this.plataforma = new Plataforma();
+		this.bola = new Bola(1.0f, 0f, 5f, -5f);
+		this.plataforma = new Plataforma(0f, -5f, 0f);
 		this.vidas = vidas;
-		this.tijolos = new ArrayList<Tijolo>();
-		montarTijolos();
-	}
-
-	public void montarTijolos() {
-		// Aqui será montado os tijolos, talvez via arquivo...
+		this.tijolos = Util.carregarTijolos();
 	}
 	
-	public void desenhar(GL gl) {
-		bola.desenhar(gl);
+	public void desenhar(GL gl, GLU glu) {
+		bola.desenhar(gl, glu);
 		plataforma.desenhar(gl);
 		for (Tijolo tijolo : tijolos) {
 			tijolo.desenhar(gl);
