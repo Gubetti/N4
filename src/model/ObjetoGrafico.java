@@ -1,8 +1,10 @@
 package model;
 
+import javax.media.opengl.GL;
+
 import com.sun.opengl.util.texture.Texture;
 
-public class ObjetoGrafico {
+public abstract class ObjetoGrafico {
 
 	private float xTranslacao;
 	private float yTranslacao;
@@ -10,8 +12,11 @@ public class ObjetoGrafico {
 	private float xEscala;
 	private float yEscala;
 	private float zEscala;
-	private Texture textureTijolo;
+	private Texture texture;
 	private BBox bBox;
+	
+	public void desenhar(GL gl) {
+	}
 	
 	public float getxTranslacao() {
 		return xTranslacao;
@@ -61,12 +66,12 @@ public class ObjetoGrafico {
 		this.zEscala = zEscala;
 	}
 	
-	public Texture getTextureTijolo() {
-		return textureTijolo;
+	public Texture getTexture() {
+		return texture;
 	}
 	
-	public void setTextureTijolo(Texture textureTijolo) {
-		this.textureTijolo = textureTijolo;
+	public void setTexture(Texture texture) {
+		this.texture = texture;
 	}
 	
 	public BBox getbBox() {
