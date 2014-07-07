@@ -11,11 +11,14 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
+import com.sun.opengl.util.GLUT;
+
 import model.Mundo;
 
 public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 	private GL gl;
 	private GLU glu;
+	private GLUT glut;
 	private GLAutoDrawable glDrawable;
 	private Mundo mundo;
 
@@ -23,6 +26,7 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		glDrawable = drawable;
 		gl = drawable.getGL();
 		glu = new GLU();
+		glut = new GLUT();
 		glDrawable.setGL(new DebugGL(gl));
 
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -59,7 +63,7 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 				mundo.getCamera().getxUp(), mundo.getCamera().getyUp(), mundo.getCamera().getzUp());
 
 		drawAxis();
-		mundo.desenhar(gl, glu);
+		mundo.desenhar(gl, glu, glut);
 
 		gl.glFlush();
 	}
@@ -119,7 +123,7 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		try {
 			int dif = glDrawable.getWidth() / 2;
 			mundo.getPlataforma().setxTranslacao((e.getX() - dif) * 0.05f);
-			mundo.getPlataforma().setzTranslacao((e.getY() - dif) * 0.05f);
+//			mundo.getPlataforma().setzTranslacao((e.getY() - dif) * 0.05f);
 			glDrawable.display();
 		} catch (NullPointerException npe) {
 		}

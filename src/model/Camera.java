@@ -22,7 +22,7 @@ public class Camera {
 	public void visao2() {
 		xEye = 0.0f;
 		yEye = 0.0f;
-		zEye = 20.0f;
+		zEye = 22.0f;
 	}
 
 	public double getxEye() {

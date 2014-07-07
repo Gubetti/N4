@@ -5,6 +5,8 @@ import java.util.List;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 
+import com.sun.opengl.util.GLUT;
+
 import utils.Util;
 
 public class Mundo {
@@ -13,20 +15,23 @@ public class Mundo {
 	private Bola bola;
 	private Plataforma plataforma;
 	private List<Tijolo> tijolos;
+	private Mesa mesa;
 	// private BBox bBox; //Será a melhor forma de controlar o limite da tela?
 	private int vidas;
 
 	public Mundo(int vidas) {
 		this.camera = new Camera();
-		this.bola = new Bola(1.0f, 0f, 5f, -5f);
-		this.plataforma = new Plataforma(0f, -5f, 0f);
+		this.bola = new Bola(1.0f, 0f, 0f, -2f);
+		this.plataforma = new Plataforma(0f, 0f, 10f);
+		this.mesa = new Mesa();
 		this.vidas = vidas;
 		this.tijolos = Util.carregarTijolos();
 	}
 	
-	public void desenhar(GL gl, GLU glu) {
+	public void desenhar(GL gl, GLU glu, GLUT glut) {
 		bola.desenhar(gl, glu);
 		plataforma.desenhar(gl);
+		mesa.desenhar(gl, glut);
 		for (Tijolo tijolo : tijolos) {
 			tijolo.desenhar(gl);
 		}
@@ -54,6 +59,14 @@ public class Mundo {
 
 	public void setPlataforma(Plataforma plataforma) {
 		this.plataforma = plataforma;
+	}
+	
+	public Mesa getMesa() {
+		return mesa;
+	}
+	
+	public void setMesa(Mesa mesa) {
+		this.mesa = mesa;
 	}
 
 	public List<Tijolo> getTijolos() {
