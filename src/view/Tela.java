@@ -76,32 +76,31 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 				mundo.getCamera().getxCenter(), mundo.getCamera().getyCenter(), mundo.getCamera().getzCenter(),
 				mundo.getCamera().getxUp(), mundo.getCamera().getyUp(), mundo.getCamera().getzUp());
 
-		drawAxis();
 		mundo.desenhar(gl, glu, glut);
 		tratarColisoes();
 		gl.glFlush();
 	}
 
-	public void drawAxis() {
-		// eixo X - Red
-		gl.glColor3f(1.0f, 0.0f, 0.0f);
-		gl.glBegin(GL.GL_LINES);
-		gl.glVertex3f(0.0f, 0.0f, 0.0f);
-		gl.glVertex3f(10.0f, 0.0f, 0.0f);
-		gl.glEnd();
-		// eixo Y - Green
-		gl.glColor3f(0.0f, 1.0f, 0.0f);
-		gl.glBegin(GL.GL_LINES);
-		gl.glVertex3f(0.0f, 0.0f, 0.0f);
-		gl.glVertex3f(0.0f, 10.0f, 0.0f);
-		gl.glEnd();
-		// eixo Z - Blue
-		gl.glColor3f(0.0f, 0.0f, 1.0f);
-		gl.glBegin(GL.GL_LINES);
-		gl.glVertex3f(0.0f, 0.0f, 0.0f);
-		gl.glVertex3f(0.0f, 0.0f, 10.0f);
-		gl.glEnd();
-	}
+//	public void drawAxis() {
+//		// eixo X - Red
+//		gl.glColor3f(1.0f, 0.0f, 0.0f);
+//		gl.glBegin(GL.GL_LINES);
+//		gl.glVertex3f(0.0f, 0.0f, 0.0f);
+//		gl.glVertex3f(10.0f, 0.0f, 0.0f);
+//		gl.glEnd();
+//		// eixo Y - Green
+//		gl.glColor3f(0.0f, 1.0f, 0.0f);
+//		gl.glBegin(GL.GL_LINES);
+//		gl.glVertex3f(0.0f, 0.0f, 0.0f);
+//		gl.glVertex3f(0.0f, 10.0f, 0.0f);
+//		gl.glEnd();
+//		// eixo Z - Blue
+//		gl.glColor3f(0.0f, 0.0f, 1.0f);
+//		gl.glBegin(GL.GL_LINES);
+//		gl.glVertex3f(0.0f, 0.0f, 0.0f);
+//		gl.glVertex3f(0.0f, 0.0f, 10.0f);
+//		gl.glEnd();
+//	}
 
 	
 	private void iniciarBola() {
@@ -176,7 +175,7 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		}
 		
 		// Fundo da mesa
-		if(mundo.getBola().getbBox().getZmin() < mundo.getMesa().getbBox().getZmin() - 1) {
+		if(mundo.getBola().getbBox().getZmin() < mundo.getMesa().getbBox().getZmin() + 1) {
 			float valoresY[] = { -0.4f, -0.2f, -0.0f, 0.4f, 0.2f, 0.0f };
 			estadoDeslocamentoBolaY = retornaPonto(valoresY);
 			float valoresX[] = { -0.4f, -0.3f, -0.2f, -0.1f, -0.0f, 0.0f, 0.1f, 0.2f, 0.3f, 0.4f };
@@ -228,8 +227,8 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 			System.out.println("Y = 3");
 		}
 		
-		if(objetoGrafico.getbBox().getYmin() <= mundo.getBola().getbBox().getYmin() &&
-				objetoGrafico.getbBox().getYmax() >= mundo.getBola().getbBox().getYmax()) {
+		if(objetoGrafico.getbBox().getYmin() - 1 <= mundo.getBola().getbBox().getYmin() &&
+				objetoGrafico.getbBox().getYmax() + 1 >= mundo.getBola().getbBox().getYmax()) {
 			colidiuY = 1;
 			System.out.println("Y = 1");
 		}

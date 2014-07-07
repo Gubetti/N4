@@ -9,7 +9,7 @@ public class Camera {
 		xCenter = 0f;
 		yCenter = 0.5f;
 		zCenter = 0f;
-		visao1();
+		visao2();
 	}
 
 	// Métodos para mudar o valor da câmera entre os diversos ângulos...
