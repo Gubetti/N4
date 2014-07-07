@@ -13,7 +13,6 @@ public class Tijolo extends ObjetoGrafico {
 		setxEscala(2.5f);
 		setyEscala(1.5f);
 		setzEscala(1.5f);
-		setbBox(bBox);
 		this.forca = forca;
 		setDurabilidade(forca);
 	}

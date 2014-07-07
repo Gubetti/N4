@@ -20,8 +20,8 @@ public class Mundo {
 
 	public Mundo(int vidas) {
 		this.camera = new Camera();
-		this.bola = new Bola(1.0f, 0f, 0f, -2f);
-		this.plataforma = new Plataforma(0f, 0f, 18f);
+		this.bola = new Bola(1.0f, 0f, 5f, -2f);
+		this.plataforma = new Plataforma(0f, 5f, 18f);
 		this.mesa = new Mesa(15f);
 		this.vidas = vidas;
 		this.tijolos = Util.carregarTijolos();

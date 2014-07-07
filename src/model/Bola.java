@@ -46,6 +46,13 @@ public class Bola extends ObjetoGrafico {
 		glu.gluDeleteQuadric(bola);
 	}
 
+	
+	public void setPosicaoInicio() {
+		setxTranslacao(0f);
+		setyTranslacao(5f);
+		setzTranslacao(-2f);
+	}
+	
 	public float getRaio() {
 		return raio;
 	}

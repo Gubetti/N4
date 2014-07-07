@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 import com.sun.opengl.util.GLUT;
 
 import model.Mundo;
+import model.ObjetoGrafico;
+import model.Tijolo;
 
 public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 	private GL gl;
@@ -24,7 +26,10 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 	private GLUT glut;
 	private GLAutoDrawable glDrawable;
 	private Mundo mundo;
-	private int estado;
+	private float estadoDeslocamentoBolaX;
+	private float estadoDeslocamentoBolaY;
+	private float estadoDeslocamentoBolaZ;
+	private float velBola = 0;
 
 	public void init(GLAutoDrawable drawable) {
 		glDrawable = drawable;
@@ -43,7 +48,9 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		gl.glEnable(GL.GL_DEPTH_TEST);
 
 		mundo = new Mundo(3);
-		estado = 0;
+		estadoDeslocamentoBolaZ = 0;
+		estadoDeslocamentoBolaZ = 0;
+		estadoDeslocamentoBolaZ = 0.7f;
 		//JOptionPane.showMessageDialog(null, "Pressione para começar.\nQuantidade de vidas: " + mundo.getVidas(), "Início", JOptionPane.INFORMATION_MESSAGE);
 		iniciarBola();
 	}
@@ -71,7 +78,7 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 
 		drawAxis();
 		mundo.desenhar(gl, glu, glut);
-
+		tratarColisoes();
 		gl.glFlush();
 	}
 
@@ -99,43 +106,156 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 	
 	private void iniciarBola() {
 		new Timer().schedule(new TimerTask() {
-
 			@Override
 			public void run() {
 				movimentarBola();
 				glDrawable.display();
 			}
 		}, 0, 200);
-		
 	}
 	
 	private void movimentarBola() {
-		switch (estado) {
-		case 0:
-			//mundo.getBola().setzTranslacao(mundo.getBola().getzTranslacao() + 0.7f);
-			break;
-
-		default:
-			break;
-		}
-		tratrarColisoes();
+		mundo.getBola().setxTranslacao(mundo.getBola().getxTranslacao() + estadoDeslocamentoBolaX);
+		mundo.getBola().setyTranslacao(mundo.getBola().getyTranslacao() + estadoDeslocamentoBolaY);
+		mundo.getBola().setzTranslacao(mundo.getBola().getzTranslacao() + estadoDeslocamentoBolaZ + velBola);
 	}
 	
-	private void tratrarColisoes() {
-		if(mundo.getPlataforma().getbBox().getXmin() <= mundo.getBola().getbBox().getXmin() &&
-				 mundo.getPlataforma().getbBox().getXmax() >= mundo.getBola().getbBox().getXmax()) {
-			System.out.println("Situação 1");
+	private void tratarColisoes() {
+		// Primeiro com a plataforma
+		if(verificarColisao(mundo.getPlataforma())){
+			return;
+		}
+
+		// Verificar tijolos
+		for (Tijolo tijolo : mundo.getTijolos()) {
+			if(verificarColisao(tijolo)){
+				tijolo.setDurabilidade(tijolo.getDurabilidade() - 1);
+				if(tijolo.getDurabilidade() == 0) {
+					mundo.getTijolos().remove(tijolo);
+				}
+				return;
+			}
+		}
+
+		// Verificar paredes, chão e teto
+		
+		// Parede direita
+		if(mundo.getBola().getbBox().getXmax() > mundo.getMesa().getbBox().getXmax()) {
+			System.out.println("Parede direita");
 		}
 		
-		if(mundo.getPlataforma().getbBox().getXmin() <= mundo.getBola().getbBox().getXmax() &&
-				 mundo.getPlataforma().getbBox().getXmax() >= mundo.getBola().getbBox().getXmax()) {
-			System.out.println("Situação 2");
+		// Parede esquerda
+		if(mundo.getBola().getbBox().getXmin() < mundo.getMesa().getbBox().getXmin()) {
+			System.out.println("Parede esquerda");
 		}
 		
-		if(mundo.getPlataforma().getbBox().getXmax() >= mundo.getBola().getbBox().getXmin() &&
-				 mundo.getPlataforma().getbBox().getXmin() <= mundo.getBola().getbBox().getXmin()) {
-			System.out.println("Situação 3");
+		// Teto
+		if(mundo.getBola().getbBox().getYmax() > mundo.getMesa().getbBox().getYmax()) {
+			System.out.println("Teto");
 		}
+		
+		// Chão
+		if(mundo.getBola().getbBox().getYmin() < mundo.getMesa().getbBox().getYmin()) {
+			System.out.println("Chão");
+		}
+		
+		// A bola passou
+		if(mundo.getBola().getbBox().getZmax() > mundo.getMesa().getbBox().getZmax()) {
+			mundo.setVidas(mundo.getVidas() - 1);
+			mundo.getBola().setPosicaoInicio();
+			estadoDeslocamentoBolaX = 0;
+			estadoDeslocamentoBolaY = 0;
+			estadoDeslocamentoBolaZ = 0.7f;
+			JOptionPane.showMessageDialog(null, "Perdeu uma vida.\nQuantidade de vidas: " + mundo.getVidas(), "Aviso", JOptionPane.WARNING_MESSAGE);
+		}
+		
+		// Fundo da mesa
+		if(mundo.getBola().getbBox().getZmin() < mundo.getMesa().getbBox().getZmin()) {
+			estadoDeslocamentoBolaZ = 1.2f;
+		}
+	}
+	
+	private boolean verificarColisao(ObjetoGrafico objetoGrafico) {
+		int colidiuX = 0, colidiuY = 0; 
+		boolean colidiuZ = false;
+		
+		// Verifica eixo X
+		if(objetoGrafico.getbBox().getXmin() <= mundo.getBola().getbBox().getXmax() &&
+				objetoGrafico.getbBox().getXmax() >= mundo.getBola().getbBox().getXmax()) {
+			colidiuX = 2;
+		}
+		
+		if(objetoGrafico.getbBox().getXmax() >= mundo.getBola().getbBox().getXmin() &&
+				objetoGrafico.getbBox().getXmin() <= mundo.getBola().getbBox().getXmin()) {
+			colidiuX = 3;
+		}
+		
+		if(objetoGrafico.getbBox().getXmin() <= mundo.getBola().getbBox().getXmin() &&
+				objetoGrafico.getbBox().getXmax() >= mundo.getBola().getbBox().getXmax()) {
+			colidiuX = 1;
+		}
+		
+		// Verifica eixo Y
+		if(objetoGrafico.getbBox().getYmin() <= mundo.getBola().getbBox().getYmax() &&
+				objetoGrafico.getbBox().getYmax() >= mundo.getBola().getbBox().getYmax()) {
+			colidiuY = 2;
+		}
+		
+		if(objetoGrafico.getbBox().getYmax() >= mundo.getBola().getbBox().getYmin() &&
+				objetoGrafico.getbBox().getYmin() <= mundo.getBola().getbBox().getYmin()) {
+			colidiuY = 3;
+		}
+		
+		if(objetoGrafico.getbBox().getYmin() <= mundo.getBola().getbBox().getYmin() &&
+				objetoGrafico.getbBox().getYmax() >= mundo.getBola().getbBox().getYmax()) {
+			colidiuY = 1;
+		}
+		
+		// Verifica eixo Z
+		if(objetoGrafico.getbBox().getZmin() <= mundo.getBola().getbBox().getZmax() &&
+				objetoGrafico.getbBox().getZmax() >= mundo.getBola().getbBox().getZmax()) {
+			colidiuZ = true;
+		}
+		
+		if(objetoGrafico.getbBox().getZmax() >= mundo.getBola().getbBox().getZmin() &&
+				objetoGrafico.getbBox().getZmin() <= mundo.getBola().getbBox().getZmin()) {
+			colidiuZ = true;
+		}
+		
+		// Colidiu com o objeto
+		if(colidiuZ && colidiuX != 0 && colidiuY != 0) {
+			if(objetoGrafico.equals(mundo.getPlataforma())) {
+				estadoDeslocamentoBolaZ = -0.7f;
+			} else {
+				estadoDeslocamentoBolaZ = estadoDeslocamentoBolaZ * -1;	
+			}
+			velBola += 0.02f;
+			switch (colidiuX) {
+			case 1:
+				estadoDeslocamentoBolaX = 0.15f;
+				break;
+			case 2:
+				estadoDeslocamentoBolaX = -0.3f;
+				break;
+			case 3:
+				estadoDeslocamentoBolaX = 0.3f;
+			}
+			
+			switch (colidiuY) {
+			case 1:
+				estadoDeslocamentoBolaY = 0.1f;
+				break;
+			case 2:
+				estadoDeslocamentoBolaY = -0.2f;
+				break;
+			case 3:
+				estadoDeslocamentoBolaY = 0.2f;
+			}
+			
+			return true;
+		}
+
+		return false;
 	}
 	
 	public void keyPressed(KeyEvent e) {
