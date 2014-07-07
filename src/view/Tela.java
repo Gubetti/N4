@@ -123,7 +123,7 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		try {
 			int dif = glDrawable.getWidth() / 2;
 			mundo.getPlataforma().setxTranslacao((e.getX() - dif) * 0.05f);
-//			mundo.getPlataforma().setzTranslacao((e.getY() - dif) * 0.05f);
+			mundo.getPlataforma().setyTranslacao((e.getY() - dif) * -0.05f);
 			glDrawable.display();
 		} catch (NullPointerException npe) {
 		}

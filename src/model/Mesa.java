@@ -11,9 +11,9 @@ public class Mesa extends ObjetoGrafico {
 		super(0f, 0f, 0f);
 
 		// escala da parte inferior
-		setxEscala(20.0f);
+		setxEscala(30.0f);
 		setyEscala(0.1f);
-		setzEscala(30.0f);
+		setzEscala(40.0f);
 		// Se a bola passar do limite onde a plataforma se encontra é 1 vida perdida
 		// então provavelmente não será utilizado o eixo Z da mesa pra controlar isso.
 		// Eixo Y não é utilizado, já que todos os objetos ficam no mesmo eixo Y.
