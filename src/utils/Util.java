@@ -29,7 +29,9 @@ public class Util {
 	
 	public static List<Tijolo> carregarTijolos() {
 		List<Tijolo> tijolos = new ArrayList<Tijolo>();
-		
+		tijolos.add(new Tijolo(null, 0f, 1f, 0f));
+		tijolos.add(new Tijolo(null, 0f, 2.5f, 0f));
+		tijolos.add(new Tijolo(null, 0f, 4f, 0f));
 		return tijolos;
 	}
 }

@@ -1,7 +1,5 @@
 package model;
 
-import javax.media.opengl.GL;
-
 import utils.Util;
 
 public class Tijolo extends ObjetoGrafico {
@@ -17,10 +15,7 @@ public class Tijolo extends ObjetoGrafico {
 		setbBox(bBox);
 		setTexture(Util.loadImage("texture/textureBrick.png"));
 	}
-	
-	public void desenhar(GL gl) {
-		
-	}
+
 
 	public int getDurabilidade() {
 		return durabilidade;
