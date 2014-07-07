@@ -30,7 +30,6 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 	private float estadoDeslocamentoBolaX;
 	private float estadoDeslocamentoBolaY;
 	private float estadoDeslocamentoBolaZ;
-	private float velBola = 0;
 
 	public void init(GLAutoDrawable drawable) {
 		glDrawable = drawable;
@@ -49,9 +48,9 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		gl.glEnable(GL.GL_DEPTH_TEST);
 
 		mundo = new Mundo(3);
-		estadoDeslocamentoBolaZ = 0;
-		estadoDeslocamentoBolaZ = 0;
-		estadoDeslocamentoBolaZ = 0.7f;
+		estadoDeslocamentoBolaX = 0;
+		estadoDeslocamentoBolaY = 0;
+		estadoDeslocamentoBolaZ = 0.5f;
 		JOptionPane.showMessageDialog(null, "Pressione para começar.\nQuantidade de vidas: " + mundo.getVidas(), "Início", JOptionPane.INFORMATION_MESSAGE);
 		iniciarBola();
 	}
@@ -112,13 +111,13 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 				movimentarBola();
 				glDrawable.display();
 			}
-		}, 0, 200);
+		}, 0, 50);
 	}
 	
 	private void movimentarBola() {
 		mundo.getBola().setxTranslacao(mundo.getBola().getxTranslacao() + estadoDeslocamentoBolaX);
 		mundo.getBola().setyTranslacao(mundo.getBola().getyTranslacao() + estadoDeslocamentoBolaY);
-		mundo.getBola().setzTranslacao(mundo.getBola().getzTranslacao() + estadoDeslocamentoBolaZ + velBola);
+		mundo.getBola().setzTranslacao(mundo.getBola().getzTranslacao() + estadoDeslocamentoBolaZ);
 	}
 	
 	private void tratarColisoes() {
@@ -177,21 +176,21 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		}
 		
 		// Fundo da mesa
-		if(mundo.getBola().getbBox().getZmin() < mundo.getMesa().getbBox().getZmin()) {
+		if(mundo.getBola().getbBox().getZmin() < mundo.getMesa().getbBox().getZmin() - 1) {
 			float valoresY[] = { -0.4f, -0.2f, -0.0f, 0.4f, 0.2f, 0.0f };
 			estadoDeslocamentoBolaY = retornaPonto(valoresY);
 			float valoresX[] = { -0.4f, -0.3f, -0.2f, -0.1f, -0.0f, 0.0f, 0.1f, 0.2f, 0.3f, 0.4f };
 			estadoDeslocamentoBolaX = retornaPonto(valoresX);
-			estadoDeslocamentoBolaZ = 1.2f;
+			estadoDeslocamentoBolaZ = 0.5f;
 		}
 		
 		// A bola passou
-		if(mundo.getBola().getbBox().getZmax() > mundo.getMesa().getbBox().getZmax() + 1.5f) {
+		if(mundo.getBola().getbBox().getZmax() > mundo.getMesa().getbBox().getZmax() + 2.5f) {
 			mundo.setVidas(mundo.getVidas() - 1);
 			mundo.origens();
 			estadoDeslocamentoBolaX = 0;
 			estadoDeslocamentoBolaY = 0;
-			estadoDeslocamentoBolaZ = 0.7f;
+			estadoDeslocamentoBolaZ = 0.5f;
 			JOptionPane.showMessageDialog(null, "Perdeu uma vida.\nQuantidade de vidas: " + mundo.getVidas(), "Aviso", JOptionPane.WARNING_MESSAGE);
 		}
 	}
@@ -220,16 +219,19 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		if(objetoGrafico.getbBox().getYmin() <= mundo.getBola().getbBox().getYmax() &&
 				objetoGrafico.getbBox().getYmax() >= mundo.getBola().getbBox().getYmax()) {
 			colidiuY = 2;
+			System.out.println("Y = 2");
 		}
 		
 		if(objetoGrafico.getbBox().getYmax() >= mundo.getBola().getbBox().getYmin() &&
 				objetoGrafico.getbBox().getYmin() <= mundo.getBola().getbBox().getYmin()) {
 			colidiuY = 3;
+			System.out.println("Y = 3");
 		}
 		
 		if(objetoGrafico.getbBox().getYmin() <= mundo.getBola().getbBox().getYmin() &&
 				objetoGrafico.getbBox().getYmax() >= mundo.getBola().getbBox().getYmax()) {
 			colidiuY = 1;
+			System.out.println("Y = 1");
 		}
 		
 		// Verifica eixo Z
@@ -246,31 +248,36 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		// Colidiu com o objeto
 		if(colidiuZ && colidiuX != 0 && colidiuY != 0) {
 			if(objetoGrafico.equals(mundo.getPlataforma())) {
-				estadoDeslocamentoBolaZ = -0.7f;
+				estadoDeslocamentoBolaZ = -0.5f;
 			} else {
 				estadoDeslocamentoBolaZ = estadoDeslocamentoBolaZ * -1;	
 			}
-			velBola += 0.02f;
 			switch (colidiuX) {
 			case 1:
-				estadoDeslocamentoBolaX = 0.15f;
+				float valoresX1[] = { -0.15f, -0.1f, -0.0f, 0.0f, 0.0f, 0.15f };
+				estadoDeslocamentoBolaX = retornaPonto(valoresX1);
 				break;
 			case 2:
-				estadoDeslocamentoBolaX = -0.3f;
+				float valoresX2[] = { -0.35f, -0.3f, -0.25f, -0.2f, -0.15f, -0.0f};
+				estadoDeslocamentoBolaX = retornaPonto(valoresX2);
 				break;
 			case 3:
-				estadoDeslocamentoBolaX = 0.3f;
+				float valoresX3[] = { 0.35f, 0.3f, 0.25f, 0.2f, 0.15f, 0.0f};
+				estadoDeslocamentoBolaX = retornaPonto(valoresX3);
 			}
 			
 			switch (colidiuY) {
 			case 1:
-				estadoDeslocamentoBolaY = 0.1f;
+				float valoresY1[] = { -0.15f, -0.1f, -0.0f, 0.0f, 0.0f, 0.15f };
+				estadoDeslocamentoBolaY = retornaPonto(valoresY1);
 				break;
 			case 2:
-				estadoDeslocamentoBolaY = -0.2f;
+				float valoresY2[] = { -0.25f, -0.2f, -0.15f, -0.0f};
+				estadoDeslocamentoBolaY = retornaPonto(valoresY2);
 				break;
 			case 3:
-				estadoDeslocamentoBolaY = 0.2f;
+				float valoresY3[] = { 0.25f, 0.2f, 0.15f, 0.0f};
+				estadoDeslocamentoBolaY = retornaPonto(valoresY3);
 			}
 			
 			return true;
@@ -299,7 +306,7 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 			mundo.getCamera().visao3();
 			break;
 		}
-		glDrawable.display();	
+		//glDrawable.display();	
 	}
 
 	public void displayChanged(GLAutoDrawable arg0, boolean arg1, boolean arg2) {
