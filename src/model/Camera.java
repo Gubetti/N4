@@ -25,6 +25,12 @@ public class Camera {
 		zEye = 42.0f;
 	}
 
+	public void visao3() {
+		xEye = 0.0f;
+		yEye = 0.0f;
+		zEye = 20.0f;
+	}
+
 	public double getxEye() {
 		return xEye;
 	}
