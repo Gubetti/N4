@@ -16,7 +16,6 @@ public class Mundo {
 	private Plataforma plataforma;
 	private List<Tijolo> tijolos;
 	private Mesa mesa;
-	// private BBox bBox; //Será a melhor forma de controlar o limite da tela?
 	private int vidas;
 
 	public Mundo(int vidas) {

@@ -4,12 +4,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.media.opengl.DebugGL;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+import javax.swing.JOptionPane;
 
 import com.sun.opengl.util.GLUT;
 
@@ -21,6 +24,7 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 	private GLUT glut;
 	private GLAutoDrawable glDrawable;
 	private Mundo mundo;
+	private int estado;
 
 	public void init(GLAutoDrawable drawable) {
 		glDrawable = drawable;
@@ -39,8 +43,11 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		gl.glEnable(GL.GL_DEPTH_TEST);
 
 		mundo = new Mundo(3);
+		estado = 0;
+		//JOptionPane.showMessageDialog(null, "Pressione para começar.\nQuantidade de vidas: " + mundo.getVidas(), "Início", JOptionPane.INFORMATION_MESSAGE);
+		iniciarBola();
 	}
-	
+
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 	    gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL.GL_PROJECTION);
@@ -89,6 +96,48 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		gl.glEnd();
 	}
 
+	
+	private void iniciarBola() {
+		new Timer().schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				movimentarBola();
+				glDrawable.display();
+			}
+		}, 0, 200);
+		
+	}
+	
+	private void movimentarBola() {
+		switch (estado) {
+		case 0:
+			//mundo.getBola().setzTranslacao(mundo.getBola().getzTranslacao() + 0.7f);
+			break;
+
+		default:
+			break;
+		}
+		tratrarColisoes();
+	}
+	
+	private void tratrarColisoes() {
+		if(mundo.getPlataforma().getbBox().getXmin() <= mundo.getBola().getbBox().getXmin() &&
+				 mundo.getPlataforma().getbBox().getXmax() >= mundo.getBola().getbBox().getXmax()) {
+			System.out.println("Situação 1");
+		}
+		
+		if(mundo.getPlataforma().getbBox().getXmin() <= mundo.getBola().getbBox().getXmax() &&
+				 mundo.getPlataforma().getbBox().getXmax() >= mundo.getBola().getbBox().getXmax()) {
+			System.out.println("Situação 2");
+		}
+		
+		if(mundo.getPlataforma().getbBox().getXmax() >= mundo.getBola().getbBox().getXmin() &&
+				 mundo.getPlataforma().getbBox().getXmin() <= mundo.getBola().getbBox().getXmin()) {
+			System.out.println("Situação 3");
+		}
+	}
+	
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
 
@@ -125,9 +174,14 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 	public void mouseMoved(MouseEvent e) {
 		try {
 			int dif = glDrawable.getWidth() / 2;
-			mundo.getPlataforma().setxTranslacao((e.getX() - dif) * 0.05f);
-			mundo.getPlataforma().setyTranslacao((e.getY() - dif) * -0.05f);
-			glDrawable.display();
+			float x = (e.getX() - dif) * 0.05f;
+			float y = (e.getY() - dif) * -0.05f;
+			if(y > mundo.getMesa().getbBox().getYmin() + 1.2f && y < mundo.getMesa().getbBox().getYmax()
+					&& x - 3.5 > mundo.getMesa().getbBox().getXmin() && x + 3.5 < mundo.getMesa().getbBox().getXmax()) {	
+				mundo.getPlataforma().setyTranslacao(y);
+				mundo.getPlataforma().setxTranslacao(x);
+				//glDrawable.display();
+			}
 		} catch (NullPointerException npe) {
 		}
 	}

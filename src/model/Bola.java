@@ -25,7 +25,8 @@ public class Bola extends ObjetoGrafico {
 	public void desenhar(GL gl, GLU glu) {
 		getTexture().enable();
 		getTexture().bind();
-
+		setbBox(new BBox(getxTranslacao() - (getxEscala()/2), getxTranslacao() + (getxEscala()/2), getyTranslacao() - (getyEscala()/2), getyTranslacao() + (getyEscala()/2), getzTranslacao() - (getzEscala()/2), getzTranslacao() + (getyEscala()/2)));
+		
 		gl.glColor3f(1f, 1f, 1f);
 		GLUquadric bola = glu.gluNewQuadric();
 		// Define as propriedades da textura na bola

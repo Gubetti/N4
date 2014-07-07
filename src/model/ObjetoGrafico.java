@@ -19,6 +19,7 @@ public abstract class ObjetoGrafico {
 		this.xTranslacao = xTranslacao;
 		this.yTranslacao = yTranslacao;
 		this.zTranslacao = zTranslacao;
+		this.bBox = new BBox(xTranslacao, xTranslacao, yTranslacao, yTranslacao, zTranslacao, zTranslacao);
 	}
 
 	public void desenhar(GL gl) {
@@ -38,6 +39,7 @@ public abstract class ObjetoGrafico {
 		zMax = 1f;
 		zMin = 0;
 		
+		setbBox(new BBox(xTranslacao - (xEscala/2), xTranslacao + (xEscala/2), yTranslacao - (yEscala/2), yTranslacao + (yEscala/2), zTranslacao - (zEscala/2), zTranslacao + (zEscala/2)));
 		float corWhite[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		// Habilita e seta a textura
 		texture.enable();

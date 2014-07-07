@@ -20,9 +20,9 @@ public class Camera {
 	}
 
 	public void visao2() {
-		xEye = 0.0f;
+		xEye = 0.0001f;
 		yEye = 10.0f;
-		zEye = 42.0f;
+		zEye = 44.0f;
 	}
 
 	public void visao3() {
