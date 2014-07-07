@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -51,7 +52,7 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		estadoDeslocamentoBolaZ = 0;
 		estadoDeslocamentoBolaZ = 0;
 		estadoDeslocamentoBolaZ = 0.7f;
-		//JOptionPane.showMessageDialog(null, "Pressione para começar.\nQuantidade de vidas: " + mundo.getVidas(), "Início", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Pressione para começar.\nQuantidade de vidas: " + mundo.getVidas(), "Início", JOptionPane.INFORMATION_MESSAGE);
 		iniciarBola();
 	}
 
@@ -140,38 +141,58 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		// Verificar paredes, chão e teto
 		
 		// Parede direita
-		if(mundo.getBola().getbBox().getXmax() > mundo.getMesa().getbBox().getXmax()) {
+		if(mundo.getBola().getbBox().getXmax() > mundo.getMesa().getbBox().getXmax() - 1f) {
 			System.out.println("Parede direita");
+			float valoresX[] = { -0.8f, -0.6f, -0.4f };
+			estadoDeslocamentoBolaX = retornaPonto(valoresX);
+			float valoresY[] = { -3f, -0.4f, -0.3f, -0.2f, -0.1f, -0.0f, 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 3f};
+			estadoDeslocamentoBolaY = retornaPonto(valoresY);
 		}
 		
 		// Parede esquerda
-		if(mundo.getBola().getbBox().getXmin() < mundo.getMesa().getbBox().getXmin()) {
+		if(mundo.getBola().getbBox().getXmin() < mundo.getMesa().getbBox().getXmin() + 1f) {
 			System.out.println("Parede esquerda");
+			float valoresX[] = { 3.0f, 0.8f, 0.6f, 0.4f };
+			estadoDeslocamentoBolaX = retornaPonto(valoresX);
+			float valoresY[] = { -3f, -0.4f, -0.3f, -0.2f, -0.1f, -0.0f, 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 3f};
+			estadoDeslocamentoBolaY = retornaPonto(valoresY);
 		}
 		
 		// Teto
 		if(mundo.getBola().getbBox().getYmax() > mundo.getMesa().getbBox().getYmax()) {
 			System.out.println("Teto");
+			float valoresY[] = { -0.8f, -0.6f, -0.4f };
+			estadoDeslocamentoBolaY = retornaPonto(valoresY);
+			float valoresX[] = { -0.4f, -0.3f, -0.2f, -0.1f, -0.0f, 0.1f, 0.2f, 0.3f, 0.4f };
+			estadoDeslocamentoBolaX = retornaPonto(valoresX);
 		}
-		
+
 		// Chão
-		if(mundo.getBola().getbBox().getYmin() < mundo.getMesa().getbBox().getYmin()) {
+		if(mundo.getBola().getbBox().getYmin() < mundo.getMesa().getbBox().getYmin() + 1f) {
 			System.out.println("Chão");
-		}
-		
-		// A bola passou
-		if(mundo.getBola().getbBox().getZmax() > mundo.getMesa().getbBox().getZmax()) {
-			mundo.setVidas(mundo.getVidas() - 1);
-			mundo.getBola().setPosicaoInicio();
-			estadoDeslocamentoBolaX = 0;
-			estadoDeslocamentoBolaY = 0;
-			estadoDeslocamentoBolaZ = 0.7f;
-			JOptionPane.showMessageDialog(null, "Perdeu uma vida.\nQuantidade de vidas: " + mundo.getVidas(), "Aviso", JOptionPane.WARNING_MESSAGE);
+			float valoresY[] = {5f, 0.8f, 0.6f, 0.4f };
+			estadoDeslocamentoBolaY = retornaPonto(valoresY);
+			float valoresX[] = { -0.4f, -0.3f, -0.2f, -0.1f, -0.0f, 0.1f, 0.2f, 0.3f, 0.4f };
+			estadoDeslocamentoBolaX = retornaPonto(valoresX);
 		}
 		
 		// Fundo da mesa
 		if(mundo.getBola().getbBox().getZmin() < mundo.getMesa().getbBox().getZmin()) {
+			float valoresY[] = { -0.4f, -0.2f, -0.0f, 0.4f, 0.2f, 0.0f };
+			estadoDeslocamentoBolaY = retornaPonto(valoresY);
+			float valoresX[] = { -0.4f, -0.3f, -0.2f, -0.1f, -0.0f, 0.0f, 0.1f, 0.2f, 0.3f, 0.4f };
+			estadoDeslocamentoBolaX = retornaPonto(valoresX);
 			estadoDeslocamentoBolaZ = 1.2f;
+		}
+		
+		// A bola passou
+		if(mundo.getBola().getbBox().getZmax() > mundo.getMesa().getbBox().getZmax() + 1.5f) {
+			mundo.setVidas(mundo.getVidas() - 1);
+			mundo.origens();
+			estadoDeslocamentoBolaX = 0;
+			estadoDeslocamentoBolaY = 0;
+			estadoDeslocamentoBolaZ = 0.7f;
+			JOptionPane.showMessageDialog(null, "Perdeu uma vida.\nQuantidade de vidas: " + mundo.getVidas(), "Aviso", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	
@@ -256,6 +277,10 @@ public class Tela implements GLEventListener, KeyListener, MouseMotionListener {
 		}
 
 		return false;
+	}
+	
+	private float retornaPonto(float valores[]) {
+		return valores[new Random().nextInt(valores.length)];
 	}
 	
 	public void keyPressed(KeyEvent e) {

@@ -25,7 +25,7 @@ public class Bola extends ObjetoGrafico {
 	public void desenhar(GL gl, GLU glu) {
 		getTexture().enable();
 		getTexture().bind();
-		setbBox(new BBox(getxTranslacao() - (getxEscala()/2), getxTranslacao() + (getxEscala()/2), getyTranslacao() - (getyEscala()/2), getyTranslacao() + (getyEscala()/2), getzTranslacao() - (getzEscala()/2), getzTranslacao() + (getyEscala()/2)));
+		setbBox(new BBox(getxTranslacao() - raio, getxTranslacao() + raio, getyTranslacao() - raio, getyTranslacao() + raio, getzTranslacao() - raio, getzTranslacao() + raio));
 		
 		gl.glColor3f(1f, 1f, 1f);
 		GLUquadric bola = glu.gluNewQuadric();
@@ -46,13 +46,6 @@ public class Bola extends ObjetoGrafico {
 		glu.gluDeleteQuadric(bola);
 	}
 
-	
-	public void setPosicaoInicio() {
-		setxTranslacao(0f);
-		setyTranslacao(5f);
-		setzTranslacao(-2f);
-	}
-	
 	public float getRaio() {
 		return raio;
 	}
