@@ -7,7 +7,6 @@ import utils.Util;
 
 public class Mesa extends ObjetoGrafico {
 
-	
 	public Mesa() {
 		super(0f, 0f, 0f);
 
@@ -15,6 +14,10 @@ public class Mesa extends ObjetoGrafico {
 		setxEscala(20.0f);
 		setyEscala(0.1f);
 		setzEscala(30.0f);
+		// Se a bola passar do limite onde a plataforma se encontra é 1 vida perdida
+		// então provavelmente não será utilizado o eixo Z da mesa pra controlar isso.
+		// Eixo Y não é utilizado, já que todos os objetos ficam no mesmo eixo Y.
+		setbBox(new BBox(-10.0f, 10.0f, -1.2f, 1.2f, -15.0f, 15.0f));
 	}
 	
 	public void desenhar(GL gl, GLUT glut) {
